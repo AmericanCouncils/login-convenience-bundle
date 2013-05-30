@@ -1,0 +1,31 @@
+parameters:
+    ac_secure_resource_auth:
+        trusted_provider: ~
+
+services:
+    ac_secure_resource_auth.success_handler:
+        class: AC\SecureResourceAuthBundle\Security\ApiAuthSuccessHandler
+        public: false
+        arguments: ['@templating']
+
+    ac_secure_resource_auth.failure_handler:
+        class: AC\SecureResourceAuthBundle\Security\ApiAuthFailureHandler
+        public: false
+        arguments: ['@templating']
+
+    ac_secure_resource_auth.session.storage.auth_header:
+        class: AC\SecureResourceAuthBundle\Session\AuthHeaderSessionStorage
+        public: false
+        arguments: ['@service_container', '@session.handler']
+
+    ac_secure_resource_auth.openid_user_manager:
+        class: AC\SecureResourceAuthBundle\Security\UserManager
+        arguments:
+            - @fp_openid.identity_manager
+            - @doctrine.orm.entity_manager
+            - %ac_secure_resource_auth.trusted_provider%
+
+    ac_secure_resource_auth.listener.add_response_origin_dev_headers:
+        class: AC\SecureResourceAuthBundle\EventListener\ResponseOriginDevHeaders
+        tags:
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
