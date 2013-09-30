@@ -2,9 +2,9 @@ Simplifies OpenID authorization for a Symfony server providing a JSON web API.
 
 Provides the following on top of Fp/OpenIdBundle:
 
-* Abstract User class that implements most of the annoying common stuff.
-* Controller method for logging out.
-* A session mechanism based on Authorization headers instead of cookies.
-* JSON responses to login/logout requests.
+* Abstract User class that implements most of the annoying common stuff
+* Security Controller action for logging out
+* Session based on Authorization headers instead of cookies
+* JSON responses to login/logout requests
 * Generation of Access-Control-Allow-foo headers
-* A reload-less OpenID login mechanism based on http://openid-demo.appspot.com/
+* Server side of the reload-less OpenID login mechanism from http://openid-demo.appspot.com/
