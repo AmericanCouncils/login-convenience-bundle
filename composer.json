@@ -1,7 +1,7 @@
 {
     "name": "ac/secure-resource-auth-bundle",
     "version": "0.1.0",
-    "description": "Security/user services based on the Sark server",
+    "description": "OpenID auth for a Symfony server providing a JSON web API",
     "type": "symfony-bundle",
     "license": "MIT",
     "authors": [
