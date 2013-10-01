@@ -24,7 +24,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue([])
                 ->end()
                 ->scalarNode("user_provider")
-                    ->defaultValue("security.user.provider.default")
+                    ->defaultValue("security.user.provider.concrete.default")
                 ->end()
             ->end();
 

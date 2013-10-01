@@ -27,7 +27,7 @@ class ACOpenIdConvenienceExtension extends Extension
             $config['trusted_providers']
         );
 
-        $container->setParameter(
+        $container->setAlias(
             'ac_open_id_convenience.user_provider',
             $config['user_provider']
         );

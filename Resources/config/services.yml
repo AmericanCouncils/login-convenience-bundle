@@ -1,7 +1,6 @@
 parameters:
     ac_open_id_convenience:
         trusted_providers: ~
-        identity_manager: ~
         user_provider: ~
 
 services:
@@ -23,6 +22,6 @@ services:
     ac_open_id_convenience.openid_user_manager:
         class: AC\OpenIdConvenienceBundle\Security\UserManager
         arguments:
-            - @fp_openid.identity_manager
-            - @%ac_open_id_convenience.user_provider%
+            #- @fp_openid.identity_manager
+            - @ac_open_id_convenience.user_provider
             - %ac_open_id_convenience.trusted_providers%
