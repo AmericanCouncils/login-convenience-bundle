@@ -1,6 +1,6 @@
 <?php
 
-namespace AC\SecureResourceAuthBundle\EventListener;
+namespace AC\OpenIdConvenienceBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace AC\SecureResourceAuthBundle\Security;
+namespace AC\OpenIdConvenienceBundle\Security;
 
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface as AuthFailureIface;
 use Symfony\Component\HttpFoundation\Request;

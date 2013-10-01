@@ -1,11 +1,11 @@
 <?php
 
-namespace AC\SecureResourceAuthBundle\Security;
+namespace AC\OpenIdConvenienceBundle\Security;
 
 use Fp\OpenIdBundle\Model\UserManager as BaseUserManager;
 use Fp\OpenIdBundle\Model\IdentityManagerInterface;
 use Doctrine\ORM\EntityManager;
-use AC\SecureResourceAuthBundle\Entity\OpenIdIdentity;
+use AC\OpenIdConvenienceBundle\Entity\OpenIdIdentity;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
 class UserManager extends BaseUserManager
@@ -30,7 +30,7 @@ class UserManager extends BaseUserManager
             throw new BadCredentialsException('No email address provided');
         }
 
-        $repo = $this->entityManager->getRepository('ACSecureResourceAuthBundle:User');
+        $repo = $this->entityManager->getRepository('ACOpenIdConvenienceBundle:User');
         $user = $repo->findOneBy([
             'email' => $attributes['contact/email']
         ]);

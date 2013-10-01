@@ -1,6 +1,6 @@
 <?php
 
-namespace AC\SecureResourceAuthBundle\DependencyInjection;
+namespace AC\OpenIdConvenienceBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\Loader;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class ACSecureResourceAuthExtension extends Extension
+class ACOpenIdConvenienceExtension extends Extension
 {
     /**
      * {@inheritDoc}
@@ -23,7 +23,7 @@ class ACSecureResourceAuthExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $container->setParameter(
-            'ac_secure_resource_auth.trusted_provider',
+            'ac_openid_convenience.trusted_provider',
             $config['trusted_provider']
         );
 

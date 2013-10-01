@@ -1,31 +1,31 @@
 parameters:
-    ac_secure_resource_auth:
+    ac_openid_convenience:
         trusted_provider: ~
 
 services:
-    ac_secure_resource_auth.success_handler:
-        class: AC\SecureResourceAuthBundle\Security\ApiAuthSuccessHandler
+    ac_openid_convenience.success_handler:
+        class: AC\OpenIdConvenienceBundle\Security\ApiAuthSuccessHandler
         public: false
         arguments: ['@templating']
 
-    ac_secure_resource_auth.failure_handler:
-        class: AC\SecureResourceAuthBundle\Security\ApiAuthFailureHandler
+    ac_openid_convenience.failure_handler:
+        class: AC\OpenIdConvenienceBundle\Security\ApiAuthFailureHandler
         public: false
         arguments: ['@templating']
 
-    ac_secure_resource_auth.session.storage.auth_header:
-        class: AC\SecureResourceAuthBundle\Session\AuthHeaderSessionStorage
+    ac_openid_convenience.session.storage.auth_header:
+        class: AC\OpenIdConvenienceBundle\Session\AuthHeaderSessionStorage
         public: false
         arguments: ['@service_container', '@session.handler']
 
-    ac_secure_resource_auth.openid_user_manager:
-        class: AC\SecureResourceAuthBundle\Security\UserManager
+    ac_openid_convenience.openid_user_manager:
+        class: AC\OpenIdConvenienceBundle\Security\UserManager
         arguments:
             - @fp_openid.identity_manager
             - @doctrine.orm.entity_manager
-            - %ac_secure_resource_auth.trusted_provider%
+            - %ac_openid_convenience.trusted_provider%
 
-    ac_secure_resource_auth.listener.add_response_origin_dev_headers:
-        class: AC\SecureResourceAuthBundle\EventListener\ResponseOriginDevHeaders
+    ac_openid_convenience.listener.add_response_origin_dev_headers:
+        class: AC\OpenIdConvenienceBundle\EventListener\ResponseOriginDevHeaders
         tags:
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }

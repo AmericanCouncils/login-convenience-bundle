@@ -1,6 +1,6 @@
 <?php
 
-namespace AC\SecureResourceAuthBundle\Entity;
+namespace AC\OpenIdConvenienceBundle\Entity;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;

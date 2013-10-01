@@ -1,6 +1,6 @@
 <?php
 
-namespace AC\SecureResourceAuthBundle\Security;
+namespace AC\OpenIdConvenienceBundle\Security;
 
 use Symfony\Component\HttpFoundation\Response;
 
@@ -16,7 +16,7 @@ class AuthHandler
     function response($data)
     {
         return new Response($this->templating->render(
-            'ACSecureResourceAuthBundle:Auth:popupReturn.html.twig',
+            'ACOpenIdConvenienceBundle:Auth:popupReturn.html.twig',
             array('jdata' => json_encode($data))
         ));
     }

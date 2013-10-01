@@ -1,6 +1,6 @@
 <?php
 
-namespace AC\SecureResourceAuthBundle\Controller;
+namespace AC\OpenIdConvenienceBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 use Fp\OpenIdBundle\Controller\SecurityController as BaseSecurityController;
