@@ -1,28 +1,28 @@
 parameters:
-    ac_openid_convenience:
+    ac_open_id_convenience:
         trusted_providers: ~
         identity_manager: ~
         user_provider: ~
 
 services:
-    ac_openid_convenience.success_handler:
+    ac_open_id_convenience.success_handler:
         class: AC\OpenIdConvenienceBundle\Security\ApiAuthSuccessHandler
         public: false
         arguments: ['@templating']
 
-    ac_openid_convenience.failure_handler:
+    ac_open_id_convenience.failure_handler:
         class: AC\OpenIdConvenienceBundle\Security\ApiAuthFailureHandler
         public: false
         arguments: ['@templating']
 
-    ac_openid_convenience.session.storage.auth_header:
+    ac_open_id_convenience.session.storage.auth_header:
         class: AC\OpenIdConvenienceBundle\Session\AuthHeaderSessionStorage
         public: false
         arguments: ['@service_container', '@session.handler']
 
-    ac_openid_convenience.openid_user_manager:
+    ac_open_id_convenience.openid_user_manager:
         class: AC\OpenIdConvenienceBundle\Security\UserManager
         arguments:
             - @fp_openid.identity_manager
-            - @%ac_openid_convenience.user_provider%
-            - %ac_openid_convenience.trusted_providers%
+            - @%ac_open_id_convenience.user_provider%
+            - %ac_open_id_convenience.trusted_providers%

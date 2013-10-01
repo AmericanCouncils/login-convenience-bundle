@@ -18,7 +18,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('ac_openid_convenience')
+        $rootNode = $treeBuilder->root('ac_open_id_convenience')
             ->children()
                 ->arrayNode("trusted_providers")
                     ->defaultValue([])

@@ -23,12 +23,12 @@ class ACOpenIdConvenienceExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $container->setParameter(
-            'ac_openid_convenience.trusted_providers',
+            'ac_open_id_convenience.trusted_providers',
             $config['trusted_providers']
         );
 
         $container->setParameter(
-            'ac_openid_convenience.user_provider',
+            'ac_open_id_convenience.user_provider',
             $config['user_provider']
         );
 
