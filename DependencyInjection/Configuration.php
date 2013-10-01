@@ -20,7 +20,7 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('ac_open_id_convenience')
             ->children()
-                ->arrayNode("trusted_providers")
+                ->variableNode("trusted_providers")
                     ->defaultValue([])
                 ->end()
                 ->scalarNode("user_provider")
