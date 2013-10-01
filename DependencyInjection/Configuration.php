@@ -19,10 +19,14 @@ class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('ac_openid_convenience')
-            ->isRequired()
             ->children()
-            ->scalarNode("trusted_provider")->isRequired()->end()
-        ->end();
+                ->arrayNode("trusted_providers")
+                    ->defaultValue([])
+                ->end()
+                ->scalarNode("user_provider")
+                    ->defaultValue("security.user.provider.default")
+                ->end()
+            ->end();
 
         return $treeBuilder;
     }

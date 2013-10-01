@@ -23,8 +23,13 @@ class ACOpenIdConvenienceExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $container->setParameter(
-            'ac_openid_convenience.trusted_provider',
-            $config['trusted_provider']
+            'ac_openid_convenience.trusted_providers',
+            $config['trusted_providers']
+        );
+
+        $container->setParameter(
+            'ac_openid_convenience.user_provider',
+            $config['user_provider']
         );
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));

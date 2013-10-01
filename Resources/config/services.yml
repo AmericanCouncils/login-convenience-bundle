@@ -1,6 +1,8 @@
 parameters:
     ac_openid_convenience:
-        trusted_provider: ~
+        trusted_providers: ~
+        identity_manager: ~
+        user_provider: ~
 
 services:
     ac_openid_convenience.success_handler:
@@ -22,10 +24,5 @@ services:
         class: AC\OpenIdConvenienceBundle\Security\UserManager
         arguments:
             - @fp_openid.identity_manager
-            - @doctrine.orm.entity_manager
-            - %ac_openid_convenience.trusted_provider%
-
-    ac_openid_convenience.listener.add_response_origin_dev_headers:
-        class: AC\OpenIdConvenienceBundle\EventListener\ResponseOriginDevHeaders
-        tags:
-            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
+            - @%ac_openid_convenience.user_provider%
+            - %ac_openid_convenience.trusted_providers%

@@ -4,48 +4,52 @@ namespace AC\OpenIdConvenienceBundle\Security;
 
 use Fp\OpenIdBundle\Model\UserManager as BaseUserManager;
 use Fp\OpenIdBundle\Model\IdentityManagerInterface;
-use Doctrine\ORM\EntityManager;
 use AC\OpenIdConvenienceBundle\Entity\OpenIdIdentity;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class UserManager extends BaseUserManager
 {
+    private $userProvider;
     private $trustedProvider;
 
-    public function __construct(IdentityManagerInterface $identityManager, EntityManager $entityManager, $trustedProvider)
+    public function __construct(IdentityManagerInterface $identityManager, UserProviderInterface $userProvider, $trustedProviders)
     {
         parent::__construct($identityManager);
 
-        $this->entityManager = $entityManager;
-        $this->trustedProvider = $trustedProvider;
+        $this->userProvider = $userProvider;
+        $this->trustedProviders = $trustedProviders;
     }
 
+    // This is somewhat misnamed; we aren't going to create a user from an
+    // identity, but we may persist this identity and associate it with an
+    // existing user if we trust the provider.
     public function createUserFromIdentity($identity, array $attributes = array())
     {
-        if (strpos($identity, $this->trustedProvider) !== 0) {
-            throw new BadCredentialsException("Untrusted identity: $identity, need " . $this->trustedProvider);
+        // TODO: Allow use of a reg token at this point to permit identity assoc
+
+        $trusted = false;
+        foreach ($this->trustedProviders as $provider) {
+            if (strpos($identity, $this->trustedProvider) === 0) {
+                $trusted = true;
+                break;
+            }
+        }
+        if (!$trusted) {
+            throw new BadCredentialsException("Untrusted identity: $identity");
         }
 
         if (false === isset($attributes['contact/email'])) {
             throw new BadCredentialsException('No email address provided');
         }
+        $email = $attributes['contact/email'];
 
-        $repo = $this->entityManager->getRepository('ACOpenIdConvenienceBundle:User');
-        $user = $repo->findOneBy([
-            'email' => $attributes['contact/email']
-        ]);
-        if (!$user) {
-            throw new BadCredentialsException(
-                'User not authorized in this app: ' . $attributes['contact/email']
-            );
-        }
-
-        $openIdIdentity = new OpenIdIdentity();
+        $user = $this->userProvider->loadUserByUsername($email);
+        $openIdIdentity = $this->identityProvider->create();
         $openIdIdentity->setIdentity($identity);
         $openIdIdentity->setAttributes($attributes);
         $openIdIdentity->setUser($user);
-        $this->entityManager->persist($openIdIdentity);
-        $this->entityManager->flush();
+        $this->identityProvider->update($openIdIdentity);
 
         return $user;
     }

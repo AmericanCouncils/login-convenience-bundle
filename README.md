@@ -6,5 +6,4 @@ Provides the following on top of Fp/OpenIdBundle:
 * Security Controller action for logging out
 * Session based on Authorization headers instead of cookies
 * JSON responses to login/logout requests
-* Generation of Access-Control-Allow-foo headers
 * Server side of the reload-less OpenID login mechanism from http://openid-demo.appspot.com/
