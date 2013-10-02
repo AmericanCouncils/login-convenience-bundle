@@ -13,8 +13,11 @@ class UserManager extends BaseUserManager
     private $userProvider;
     private $trustedProvider;
 
-    public function __construct(IdentityManagerInterface $identityManager, UserProviderInterface $userProvider, $trustedProviders)
-    {
+    public function __construct(
+    IdentityManagerInterface $identityManager,
+    UserProviderInterface $userProvider,
+    $trustedProviders
+    ) {
         parent::__construct($identityManager);
 
         $this->userProvider = $userProvider;
@@ -30,7 +33,7 @@ class UserManager extends BaseUserManager
 
         $trusted = false;
         foreach ($this->trustedProviders as $provider) {
-            if (strpos($identity, $this->trustedProvider) === 0) {
+            if (strpos($identity, $provider) === 0) {
                 $trusted = true;
                 break;
             }
