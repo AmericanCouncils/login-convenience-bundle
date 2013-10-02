@@ -48,11 +48,11 @@ class UserManager extends BaseUserManager
         $email = $attributes['contact/email'];
 
         $user = $this->userProvider->loadUserByUsername($email);
-        $openIdIdentity = $this->identityProvider->create();
+        $openIdIdentity = $this->identityManager->create();
         $openIdIdentity->setIdentity($identity);
         $openIdIdentity->setAttributes($attributes);
         $openIdIdentity->setUser($user);
-        $this->identityProvider->update($openIdIdentity);
+        $this->identityManager->update($openIdIdentity);
 
         return $user;
     }
