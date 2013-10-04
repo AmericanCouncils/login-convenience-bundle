@@ -1,6 +1,6 @@
 <?php
 
-namespace AC\OpenIdConvenienceBundle\Security;
+namespace AC\LoginConvenienceBundle\Security;
 
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface as AuthSuccessIface;
 use Symfony\Component\HttpFoundation\Request;

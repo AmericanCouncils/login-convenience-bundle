@@ -1,6 +1,6 @@
 <?php
 
-namespace AC\OpenIdConvenienceBundle\Session;
+namespace AC\LoginConvenienceBundle\Session;
 
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 

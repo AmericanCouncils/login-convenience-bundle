@@ -1,6 +1,6 @@
 <?php
 
-namespace AC\OpenIdConvenienceBundle\DependencyInjection;
+namespace AC\LoginConvenienceBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -18,7 +18,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('ac_open_id_convenience')
+        $rootNode = $treeBuilder->root('ac_login_convenience')
             ->children()
                 ->variableNode("trusted_providers")
                     ->defaultValue([])

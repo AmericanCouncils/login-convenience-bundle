@@ -1,6 +1,6 @@
 <?php
 
-namespace AC\OpenIdConvenienceBundle\Entity;
+namespace AC\LoginConvenienceBundle\Entity;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="OpenIdUser")
+ * @ORM\Table(name="User")
  */
 class User implements AdvancedUserInterface, EquatableInterface
 {

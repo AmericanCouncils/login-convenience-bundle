@@ -1,7 +1,8 @@
-Simplifies OpenID authorization for a Symfony server providing a JSON web API.
+Simplifies authentication for a Symfony server providing a JSON web API.
 
 Provides the following on top of Fp/OpenIdBundle:
 
+* OpenID logins
 * Abstract User class that implements most of the annoying common stuff
 * Security Controller action for logging out
 * Session based on Authorization headers instead of cookies

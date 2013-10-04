@@ -1,6 +1,6 @@
 <?php
 
-namespace AC\OpenIdConvenienceBundle\Session;
+namespace AC\LoginConvenienceBundle\Session;
 
 class AuthHeaderSessionStorage extends CookielessSessionStorage
 {

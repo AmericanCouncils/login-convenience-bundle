@@ -1,6 +1,6 @@
 <?php
 
-namespace AC\OpenIdConvenienceBundle\Controller;
+namespace AC\LoginConvenienceBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 use Fp\OpenIdBundle\Controller\SecurityController as BaseSecurityController;

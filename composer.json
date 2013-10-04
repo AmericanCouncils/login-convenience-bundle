@@ -1,7 +1,7 @@
 {
-    "name": "ac/openid-convenience-bundle",
+    "name": "ac/login-convenience-bundle",
     "version": "0.1.0",
-    "description": "OpenID auth for a Symfony server providing a JSON web API",
+    "description": "Authentication for a Symfony server providing a JSON web API",
     "type": "symfony-bundle",
     "license": "MIT",
     "authors": [
@@ -25,7 +25,7 @@
         "fp/lightopenid": "*@dev"
     },
     "autoload": {
-        "psr-0": { "AC\\OpenIdConvenienceBundle": "" }
+        "psr-0": { "AC\\LoginConvenienceBundle": "" }
     },
-    "target-dir": "AC/OpenIdConvenienceBundle"
+    "target-dir": "AC/LoginConvenienceBundle"
 }

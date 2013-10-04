@@ -1,6 +1,6 @@
 <?php
 
-namespace AC\OpenIdConvenienceBundle\DependencyInjection;
+namespace AC\LoginConvenienceBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\Loader;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class ACOpenIdConvenienceExtension extends Extension
+class ACLoginConvenienceExtension extends Extension
 {
     /**
      * {@inheritDoc}
@@ -23,12 +23,12 @@ class ACOpenIdConvenienceExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $container->setParameter(
-            'ac_open_id_convenience.trusted_providers',
+            'ac_login_convenience.trusted_providers',
             $config['trusted_providers']
         );
 
         $container->setAlias(
-            'ac_open_id_convenience.user_provider',
+            'ac_login_convenience.user_provider',
             $config['user_provider']
         );
 

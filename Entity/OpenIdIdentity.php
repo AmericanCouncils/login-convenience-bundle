@@ -1,6 +1,6 @@
 <?php
 
-namespace AC\OpenIdConvenienceBundle\Entity;
+namespace AC\LoginConvenienceBundle\Entity;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
@@ -24,7 +24,7 @@ class OpenIdIdentity extends BaseUserIdentity
     /**
       * @var Symfony\Component\Security\Core\User\UserInterface
       *
-      * @ORM\ManyToOne(targetEntity="AC\OpenIdConvenienceBundle\Entity\User", fetch="EAGER")
+      * @ORM\ManyToOne(targetEntity="AC\LoginConvenienceBundle\Entity\User", fetch="EAGER")
       * @ORM\JoinColumns({
       *   @ORM\JoinColumn(name="user_id", referencedColumnName="id")
       * })
