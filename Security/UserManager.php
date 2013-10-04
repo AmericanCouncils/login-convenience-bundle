@@ -29,8 +29,6 @@ class UserManager extends BaseUserManager
     // existing user if we trust the provider.
     public function createUserFromIdentity($identity, array $attributes = array())
     {
-        // TODO: Allow use of a reg token at this point to permit identity assoc
-
         $trusted = false;
         foreach ($this->trustedProviders as $provider) {
             if (strpos($identity, $provider) === 0) {
@@ -46,14 +44,19 @@ class UserManager extends BaseUserManager
             throw new BadCredentialsException('No email address provided');
         }
         $email = $attributes['contact/email'];
-
         $user = $this->userProvider->loadUserByUsername($email);
+
+        $this->associateIdentityWithUser($identity, $user, $attributes);
+
+        return $user;
+    }
+
+    public function associateIdentityWithUser($identity, $user, $attributes)
+    {
         $openIdIdentity = $this->identityManager->create();
         $openIdIdentity->setIdentity($identity);
         $openIdIdentity->setAttributes($attributes);
         $openIdIdentity->setUser($user);
         $this->identityManager->update($openIdIdentity);
-
-        return $user;
     }
 }
