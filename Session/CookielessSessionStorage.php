@@ -3,6 +3,7 @@
 namespace AC\LoginConvenienceBundle\Session;
 
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
+use Symfony\Component\DependencyInjection\Exception\InactiveScopeException;
 
 abstract class CookielessSessionStorage extends NativeSessionStorage
 {
@@ -15,8 +16,14 @@ abstract class CookielessSessionStorage extends NativeSessionStorage
         // FIXME: This is a hack to deal with hard-coded cookie requirement
         // in Request::hasPreviousSession. Since we're just altering the
         // Request here, no actual cookies will be sent to the client.
-        $request = $this->container->get('request');
-        $request->cookies->set($this->getSessionName(), "1");
+        try {
+            $request = $this->container->get('request');
+            $request->cookies->set($this->getSessionName(), "1");
+        } catch (InactiveScopeException $e) {
+            // No-op: We're not handling an HTTP request right now, e.g. we're
+            // a console command, so we don't need to worry about hacking
+            // the Request in this case.
+        }
 
         $opts = [
             "use_cookies" => 0,
