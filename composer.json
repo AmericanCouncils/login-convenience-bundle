@@ -12,17 +12,17 @@
     ],
     "require": {
         "php": ">=5.4",
-        "symfony/symfony": "2.2.*",
+        "symfony/symfony": "2.3.*",
         "doctrine/orm": ">=2.2.3,<2.4-dev",
         "doctrine/doctrine-bundle": "*",
-        "symfony/framework-bundle": "2.2.*",
-        "symfony/console": "2.2.*",
+        "symfony/framework-bundle": "2.3.*",
+        "symfony/console": "2.3.*",
         "sensio/distribution-bundle": "2.*",
         "sensio/framework-extra-bundle": "2.*",
         "sensio/generator-bundle": "2.*",
         "jms/serializer-bundle": "*",
-        "fp/openid-bundle": "*@dev",
-        "fp/lightopenid": "*@dev"
+        "fp/openid-bundle": "dev-master",
+        "fp/lightopenid": "dev-master"
     },
     "autoload": {
         "psr-0": { "AC\\LoginConvenienceBundle": "" }
