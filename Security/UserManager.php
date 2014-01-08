@@ -40,11 +40,14 @@ class UserManager extends BaseUserManager
             throw new BadCredentialsException("Untrusted identity: $identity");
         }
 
-        if (false === isset($attributes['contact/email'])) {
+        if (!isset($attributes['contact/email'])) {
             throw new BadCredentialsException('No email address provided');
         }
         $email = $attributes['contact/email'];
         $user = $this->userProvider->loadUserByUsername($email);
+        if (!$user) {
+            throw new BadCredentialsException('User not known to application');
+        }
 
         $this->associateIdentityWithUser($identity, $user, $attributes);
 
