@@ -16,7 +16,6 @@ Provides the following on top of Fp/OpenIdBundle:
 - Add and run a migration to create User and OpenIdIdentity tables
 - Delete everything from security.yml but this:
 
-
 ```
 ac_login_convenience:
     openid_path: /openid
