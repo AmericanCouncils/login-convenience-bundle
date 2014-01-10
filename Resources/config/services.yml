@@ -1,7 +1,6 @@
 parameters:
     ac_login_convenience:
         trusted_providers: ~
-        user_provider: ~
 
 services:
     ac_login_convenience.success_handler:
@@ -23,5 +22,5 @@ services:
         class: AC\LoginConvenienceBundle\Security\UserManager
         arguments:
             - @fp_openid.identity_manager
-            - @ac_login_convenience.user_provider
-            - %ac_login_convenience.trusted_providers%
+            - @security.user.provider.concrete.app_users
+            - %ac_login_convenience.trusted_openid_providers%

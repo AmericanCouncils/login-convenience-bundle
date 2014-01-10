@@ -20,11 +20,17 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('ac_login_convenience')
             ->children()
-                ->variableNode("trusted_providers")
-                    ->defaultValue([])
+                ->scalarNode("user_class")
+                    ->defaultValue("AC\LoginConvenienceBundle\Entity\User")
                 ->end()
-                ->scalarNode("user_provider")
-                    ->defaultValue("security.user.provider.concrete.default")
+                ->scalarNode("openid_path")
+                    ->defaultNull()
+                ->end()
+                ->variableNode("secured_paths")
+                    ->defaultValue(["/api"])
+                ->end()
+                ->variableNode("trusted_openid_providers")
+                    ->defaultValue([])
                 ->end()
             ->end();
 
