@@ -28,3 +28,12 @@ openid_security:
     resource: "@FpOpenIdBundle/Resources/config/routing/security.xml"
     prefix: /openid
 ```
+
+- Optionally, if you want to use the Authentication header to transmit the session key
+rather than a cookie, add this setting to config.yml:
+
+```
+framework:
+  session:
+    storage_id: ac_login_convenience.session.storage.auth_header
+```
