@@ -3,6 +3,7 @@
 namespace AC\LoginConvenienceBundle\Entity;
 
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Doctrine\ORM\Mapping as ORM;
@@ -30,6 +31,20 @@ class User implements UserInterface, EquatableInterface
     public function getEmail() { return $this->email; }
     public function setEmail($email) { return $this->email = $email; }
 
+    /**
+     * @ORM\Column(type="boolean", nullable=false)
+     */
+    protected $locked = false;
+    public function isLocked() { return $this->locked; }
+    public function setLocked($locked) { return $this->locked = $locked; }
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $expiration = null;
+    public function getExpiration() { return $this->expiration; }
+    public function setExpiration($e) { return $this->expiration = $e; }
+
     public function getRoles() { return ['ROLE_USER']; }
     public function getUsername() { return $this->email; }
 
@@ -51,4 +66,15 @@ class User implements UserInterface, EquatableInterface
             $this->email == $user->getEmail()
         );
     }
+
+    public function isAccountNonExpired() {
+        return !($this->expiration && $this->expiration >= time());
+    }
+
+    public function isAccountNonLocked() {
+        return !$this->isLocked();
+    }
+
+    public function isCredentialsNonExpired() { return true; }
+    public function isEnabled() { return true; }
 }
