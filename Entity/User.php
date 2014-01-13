@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="User")
  */
-class User implements UserInterface, EquatableInterface
+class User implements AdvancedUserInterface, EquatableInterface
 {
     # FIXME: On deleting User, also delete all associated OpenIdIdentities
 
