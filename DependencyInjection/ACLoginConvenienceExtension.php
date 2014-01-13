@@ -64,7 +64,7 @@ class ACLoginConvenienceExtension extends Extension implements PrependExtensionI
         foreach ($config['secured_paths'] as $path) {
             $securityConf["access_control"][] = [
                 "path" => "^$path/.+",
-                "roles" => [ "IS_AUTHENTICATED_FULLY" ]
+                "roles" => "IS_AUTHENTICATED_FULLY"
             ];
         }
 
@@ -84,7 +84,7 @@ class ACLoginConvenienceExtension extends Extension implements PrependExtensionI
             ];
             array_unshift($securityConf["access_control"], [
                 "path" => "^$oid_path/.+",
-                "roles" => [ "IS_AUTHENTICATED_ANONYMOUSLY" ]
+                "roles" => "IS_AUTHENTICATED_ANONYMOUSLY"
             ]);
 
             # TODO: Use Mongo to store identities if app is storing users there
