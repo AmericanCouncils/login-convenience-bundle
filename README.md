@@ -11,7 +11,7 @@ Provides the following on top of Fp/OpenIdBundle:
 
 ## Installation
 
-- Install with composer
+- Install `ac/login-convenience-bundle` with composer
 - Add and run a migration to create User and OpenIdIdentity tables
 - Add ACLoginConvenienceBundle and FpOpenIdBundle to AppKernel
 - Delete everything from security.yml but this:
