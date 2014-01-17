@@ -18,7 +18,8 @@ Provides the following on top of Fp/OpenIdBundle:
 
 ```
 ac_login_convenience:
-    openid_path: /openid
+    secured_paths:
+        - /important-stuff
 ```
 
 - Optionally, if you want to use the Authentication header to transmit the session key
