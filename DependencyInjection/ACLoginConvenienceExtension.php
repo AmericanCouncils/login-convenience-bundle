@@ -28,10 +28,15 @@ class ACLoginConvenienceExtension extends Extension implements PrependExtensionI
             $config['trusted_openid_providers']
         );
 
-        $loader = new Loader\YamlFileLoader(
+        $container->setParameter(
+            'ac_login_convenience.openid_path',
+            $config['openid_path']
+        );
+
+        $serviceLoader = new Loader\YamlFileLoader(
             $container, new FileLocator(__DIR__.'/../Resources/config')
         );
-        $loader->load('services.yml');
+        $serviceLoader->load('services.yml');
     }
 
     public function prepend(ContainerBuilder $container)
@@ -41,24 +46,56 @@ class ACLoginConvenienceExtension extends Extension implements PrependExtensionI
             $container->getExtensionConfig($this->getAlias())
         );
 
+        $container->prependExtensionConfig("security",
+            $this->generateSecurityConf($config)
+        );
+
+        # TODO: Use Mongo to store identities if app is storing users there
+        $container->prependExtensionConfig("fp_open_id", [
+            "db_driver" => "orm",
+            "identity_class" => "AC\LoginConvenienceBundle\Entity\OpenIdIdentity"
+        ]);
+    }
+
+    private function generateSecurityConf($config)
+    {
+        $oidPath = $config['openid_path'];
+
         $securityConf = [
             "providers" => [
                 "app_users" => [
                     # TODO: Allow app to use Mongo instead of Doctrine ORM
                     "entity" => [
-                        "class" => $config['user_class'],
+                        "class" => $config['user_entity_class'],
                         "property" => "email"
                     ]
+                ],
+                "openid_user_manager" => [
+                    "id" => "ac_login_convenience.openid_user_manager"
                 ]
             ],
             "firewalls" => [
                 "main" => [
                     "pattern" => "^/",
                     "anonymous" => true,
-                    "logout" => [ "path" => "/openid/logout" ]
+                    "logout" => [ "path" => "/openid/logout" ],
+                    "fp_openid" => [
+                        "create_user_if_not_exists" => true,
+                        "login_path" => "$oidPath/login_openid",
+                        "check_path" => "$oidPath/login_check_openid",
+                        "provider" => "openid_user_manager",
+                        "required_attributes" => [ "contact/email" ],
+                        "success_handler" => "ac_login_convenience.success_handler",
+                        "failure_handler" => "ac_login_convenience.failure_handler"
+                    ]
                 ]
             ],
-            "access_control" => []
+            "access_control" => [
+                [
+                    "path" => "^$oidPath/.+",
+                    "roles" => "IS_AUTHENTICATED_ANONYMOUSLY"
+                ]
+            ]
         ];
 
         foreach ($config['secured_paths'] as $path) {
@@ -68,32 +105,6 @@ class ACLoginConvenienceExtension extends Extension implements PrependExtensionI
             ];
         }
 
-        if (isset($config['openid_path']) && !is_null($config['openid_path'])) {
-            $oid_path = $config['openid_path'];
-            $securityConf["providers"]["openid_user_manager"] = [
-                "id" => "ac_login_convenience.openid_user_manager"
-            ];
-            $securityConf["firewalls"]["main"]["fp_openid"] = [
-                "create_user_if_not_exists" => true,
-                "login_path" => "$oid_path/login_openid",
-                "check_path" => "$oid_path/login_check_openid",
-                "provider" => "openid_user_manager",
-                "required_attributes" => [ "contact/email" ],
-                "success_handler" => "ac_login_convenience.success_handler",
-                "failure_handler" => "ac_login_convenience.failure_handler"
-            ];
-            array_unshift($securityConf["access_control"], [
-                "path" => "^$oid_path/.+",
-                "roles" => "IS_AUTHENTICATED_ANONYMOUSLY"
-            ]);
-
-            # TODO: Use Mongo to store identities if app is storing users there
-            $container->prependExtensionConfig("fp_open_id", [
-                "db_driver" => "orm",
-                "identity_class" => "AC\LoginConvenienceBundle\Entity\OpenIdIdentity"
-            ]);
-        }
-
-        $container->prependExtensionConfig("security", $securityConf);
+        return $securityConf;
     }
 }

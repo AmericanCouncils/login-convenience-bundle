@@ -9,24 +9,16 @@ Provides the following on top of Fp/OpenIdBundle:
 * JSON responses to login/logout requests
 * Server side of the reload-less OpenID login mechanism from http://openid-demo.appspot.com/
 
-## Usage
+## Installation
 
 - Install with composer
-- Add ACLoginConvenienceBundle and FpOpenIdBundle to AppKernel
 - Add and run a migration to create User and OpenIdIdentity tables
+- Add ACLoginConvenienceBundle and FpOpenIdBundle to AppKernel
 - Delete everything from security.yml but this:
 
 ```
 ac_login_convenience:
     openid_path: /openid
-```
-
-- Add this to routing.yml:
-
-```
-openid_security:
-    resource: "@FpOpenIdBundle/Resources/config/routing/security.xml"
-    prefix: /openid
 ```
 
 - Optionally, if you want to use the Authentication header to transmit the session key
