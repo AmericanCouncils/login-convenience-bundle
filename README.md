@@ -30,3 +30,24 @@ framework:
   session:
     storage_id: ac_login_convenience.session.storage.auth_header
 ```
+
+## Usage
+
+Add users to your system with the user:create command. You can specify an
+OpenID identity path when doing so, which allows them to log in via that
+identity.
+
+If you don't want to specify the identity in advance, add entries to the
+ac_login_convenience.trusted_providers config
+option for any OpenID providers that you trust to authenticate previously
+unknown users:
+
+```
+ac_login_convenience:
+    trusted_providers:
+        - https://somebody.trustworthy.com/openid
+```
+
+Any user who logs in via a trusted provider can have that identity matched
+via email address to existing users you've created. This does require that the provider supply the
+user's email via the "contact/email" AX field, but this is pretty common.
