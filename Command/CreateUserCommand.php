@@ -2,7 +2,6 @@
 
 namespace AC\LoginConvenienceBundle\Command;
 
-use AC\LoginConvenienceBundle\Entity\User;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -13,7 +12,7 @@ class CreateUserCommand extends Command
     protected function configure()
     {
         $this
-        ->setName('user:create')
+        ->setName('login-convenience:create-user')
         ->setDescription('Creates a user in the local app database')
         ->addArgument('email', InputArgument::REQUIRED)
         ;
@@ -23,11 +22,13 @@ class CreateUserCommand extends Command
     {
         $container = $this->getApplication()->getKernel()->getContainer();
 
-        $user = new User;
+        $userClass = $container->getParameter('ac_login_convenience.user_model_class');
+        $user = new $userClass;
         $user->setEmail($input->getArgument('email'));
 
-        $em = $container->get('doctrine')->getManager();
-        $em->persist($user);
-        $em->flush();
+        $persistenceService = $container->getParameter('ac_login_convenience.persistence_service');
+        $manager = $container->get($persistenceService)->getManager();
+        $manager->persist($user);
+        $manager->flush();
     }
 }
