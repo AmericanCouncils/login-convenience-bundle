@@ -20,19 +20,6 @@ class ACLoginConvenienceExtension extends Extension implements PrependExtensionI
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $configuration = new Configuration();
-        $config = $this->processConfiguration($configuration, $configs);
-
-        $container->setParameter(
-            'ac_login_convenience.trusted_openid_providers',
-            $config['trusted_openid_providers']
-        );
-
-        $container->setParameter(
-            'ac_login_convenience.openid_path',
-            $config['openid_path']
-        );
-
         $serviceLoader = new Loader\YamlFileLoader(
             $container, new FileLocator(__DIR__.'/../Resources/config')
         );
@@ -46,30 +33,83 @@ class ACLoginConvenienceExtension extends Extension implements PrependExtensionI
             $container->getExtensionConfig($this->getAlias())
         );
 
-        $container->prependExtensionConfig("security",
-            $this->generateSecurityConf($config)
-        );
+        $this->setParameters($container, $config);
 
-        # TODO: Use Mongo to store identities if app is storing users there
+        $userClass = $container->getParameter('ac_login_convenience.user_model_class');
+        $dbDriver = $container->getParameter('ac_login_convenience.db_driver');
+        $oidPath = $container->getParameter('ac_login_convenience.openid_path');
+        $securedPaths = $container->getParameter('ac_login_convenience.secured_paths');
+
+        $secConf = $this->generateSecurityConf($oidPath, $securedPaths);
+        $userProviderKey = $dbDriver;
+        if ($dbDriver == "orm") { $userProviderKey = "entity"; }
+        $secConf["providers"]["app_users"][$userProviderKey] = [
+            "class" => $userClass,
+            "property" => "email"
+        ];
+        $container->prependExtensionConfig("security", $secConf);
+
         $container->prependExtensionConfig("fp_open_id", [
-            "db_driver" => "orm",
+            "db_driver" => $dbDriver,
             "identity_class" => "AC\LoginConvenienceBundle\Entity\OpenIdIdentity"
         ]);
     }
 
-    private function generateSecurityConf($config)
+    private function setParameters($container, $config)
     {
-        $oidPath = $config['openid_path'];
+        $container->setParameter(
+            'ac_login_convenience.trusted_openid_providers',
+            $config['trusted_openid_providers']
+        );
 
+        $container->setParameter(
+            'ac_login_convenience.secured_paths',
+            $config['secured_paths']
+        );
+
+        $container->setParameter(
+            'ac_login_convenience.openid_path',
+            $config['openid_path']
+        );
+
+        $container->setParameter(
+            'ac_login_convenience.db_driver',
+            $config['db_driver']
+        );
+
+        $persistenceService = null;
+        if ($config["db_driver"] == "orm") {
+            $persistenceService = "doctrine";
+        } elseif ($config["db_driver"] == "mongodb") {
+            $persistenceService = "doctrine_mongodb";
+        } else {
+            throw new \Exception("Unknown setting for db_driver");
+        }
+        $container->setParameter(
+            'ac_login_convenience.db_persistence_service',
+            $persistenceService
+        );
+
+        $userClass = $config["user_model_class"];
+        if (is_null($userClass)) {
+            if ($config["db_driver"] == "orm") {
+                $userClass = "AC\LoginConvenienceBundle\Entity\User";
+            } elseif ($config["db_driver"] == "mongodb") {
+                $userClass = "AC\LoginConvenienceBundle\Document\User";
+            }
+        }
+        $container->setParameter(
+            'ac_login_convenience.user_model_class',
+            $userClass
+        );
+
+    }
+
+    private function generateSecurityConf($oidPath, $securedPaths)
+    {
         $securityConf = [
             "providers" => [
-                "app_users" => [
-                    # TODO: Allow app to use Mongo instead of Doctrine ORM
-                    "entity" => [
-                        "class" => $config['user_entity_class'],
-                        "property" => "email"
-                    ]
-                ],
+                "app_users" => [],
                 "openid_user_manager" => [
                     "id" => "ac_login_convenience.openid_user_manager"
                 ]
@@ -98,7 +138,7 @@ class ACLoginConvenienceExtension extends Extension implements PrependExtensionI
             ]
         ];
 
-        foreach ($config['secured_paths'] as $path) {
+        foreach ($securedPaths as $path) {
             $securityConf["access_control"][] = [
                 "path" => "^$path/.+",
                 "roles" => "IS_AUTHENTICATED_FULLY"

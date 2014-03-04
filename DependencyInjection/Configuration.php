@@ -20,8 +20,11 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('ac_login_convenience')
             ->children()
-                ->scalarNode("user_entity_class")
-                    ->defaultValue("AC\LoginConvenienceBundle\Entity\User")
+                ->scalarNode("user_model_class")
+                    ->defaultValue(null)
+                ->end()
+                ->scalarNode("db_driver")
+                    ->defaultValue("orm")
                 ->end()
                 ->scalarNode("openid_path")
                     ->defaultValue("/openid")

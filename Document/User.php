@@ -1,41 +1,40 @@
 <?php
 
-namespace AC\LoginConvenienceBundle\Entity;
+namespace AC\LoginConvenienceBundle\Document;
 
 use AC\LoginConvenienceBundle\Security\AbstractUser;
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 
 /**
- * @ORM\Entity
+ * @MongoDB\Document
  */
 class User extends AbstractUser
 {
     # FIXME: On deleting User, also delete all associated OpenIdIdentities
 
     /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @MongoDB\Id(strategy="auto")
      */
     protected $id;
     public function getId() { return $this->id; }
 
     /**
-     * @ORM\Column(type="string", unique=true, nullable=false)
+     * @MongoDB\String
+     * @MongoDB\Index(unique=true)
      */
     protected $email;
     public function getEmail() { return $this->email; }
     public function setEmail($email) { return $this->email = $email; }
 
     /**
-     * @ORM\Column(type="boolean", nullable=false)
+     * @MongoDB\Boolean
      */
     protected $locked = false;
     public function isLocked() { return $this->locked; }
     public function setLocked($locked) { return $this->locked = $locked; }
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @MongoDB\Date
      */
     protected $expiration = null;
     public function getExpiration() { return $this->expiration; }
