@@ -26,7 +26,7 @@ class CreateUserCommand extends Command
         $user = new $userClass;
         $user->setEmail($input->getArgument('email'));
 
-        $persistenceService = $container->getParameter('ac_login_convenience.persistence_service');
+        $persistenceService = $container->getParameter('ac_login_convenience.db_persistence_service');
         $manager = $container->get($persistenceService)->getManager();
         $manager->persist($user);
         $manager->flush();
