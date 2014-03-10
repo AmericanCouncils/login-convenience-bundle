@@ -1,3 +1,0 @@
-test_routes:
-    resource: "@FixtureBundle/Controllers.php"
-    type:     annotation
