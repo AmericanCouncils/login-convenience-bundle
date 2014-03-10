@@ -1,6 +1,5 @@
 {
     "name": "ac/login-convenience-bundle",
-    "version": "0.1.0",
     "description": "Authentication for a Symfony server providing a JSON web API",
     "type": "symfony-bundle",
     "license": "MIT",
