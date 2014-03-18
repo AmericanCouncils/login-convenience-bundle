@@ -17,7 +17,7 @@ class OpenIdIdentity extends BaseUserIdentity
     protected $id;
 
     /**
-      * @MongoDB\ReferenceOne(targetDocument="AC\LoginConvenienceBundle\Document\User", simple=true)
+      * @MongoDB\ReferenceOne(targetDocument="AC\LoginConvenienceBundle\Document\AbstractDocumentUser", simple=true)
       */
     protected $user;
 }
