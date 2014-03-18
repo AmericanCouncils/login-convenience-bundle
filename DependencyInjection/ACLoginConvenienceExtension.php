@@ -36,6 +36,7 @@ class ACLoginConvenienceExtension extends Extension implements PrependExtensionI
         $this->setParameters($container, $config);
 
         $userClass = $container->getParameter('ac_login_convenience.user_model_class');
+        $identityClass = $container->getParameter('ac_login_convenience.openid_identity_class');
         $dbDriver = $container->getParameter('ac_login_convenience.db_driver');
         $oidPath = $container->getParameter('ac_login_convenience.openid_path');
         $securedPaths = $container->getParameter('ac_login_convenience.secured_paths');
@@ -51,7 +52,7 @@ class ACLoginConvenienceExtension extends Extension implements PrependExtensionI
 
         $container->prependExtensionConfig("fp_open_id", [
             "db_driver" => $dbDriver,
-            "identity_class" => "AC\LoginConvenienceBundle\Entity\OpenIdIdentity"
+            "identity_class" => $identityClass
         ]);
     }
 
@@ -83,7 +84,7 @@ class ACLoginConvenienceExtension extends Extension implements PrependExtensionI
         } elseif ($config["db_driver"] == "mongodb") {
             $persistenceService = "doctrine_mongodb";
         } else {
-            throw new \Exception("Unknown setting for db_driver");
+            throw new \UnexpectedValueException("Unknown setting for db_driver");
         }
         $container->setParameter(
             'ac_login_convenience.db_persistence_service',
@@ -96,11 +97,30 @@ class ACLoginConvenienceExtension extends Extension implements PrependExtensionI
                 $userClass = "AC\LoginConvenienceBundle\Entity\User";
             } elseif ($config["db_driver"] == "mongodb") {
                 $userClass = "AC\LoginConvenienceBundle\Document\User";
+            } else {
+                throw new \UnexpectedValueException(
+                    "Cannot guess user_model_class from db_driver"
+                );
             }
         }
         $container->setParameter(
             'ac_login_convenience.user_model_class',
             $userClass
+        );
+
+        $identityClass = null;
+        if ($config["db_driver"] == "orm") {
+            $identityClass = "AC\LoginConvenienceBundle\Entity\OpenIdIdentity";
+        } elseif ($config["db_driver"] == "mongodb") {
+            $identityClass = "AC\LoginConvenienceBundle\Document\OpenIdIdentity";
+        } else {
+            throw new \UnexpectedValueException(
+                "Cannot guess openid_identity_class from db_driver"
+            );
+        }
+        $container->setParameter(
+            'ac_login_convenience.openid_identity_class',
+            $identityClass
         );
 
     }

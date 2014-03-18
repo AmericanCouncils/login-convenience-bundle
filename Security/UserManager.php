@@ -4,8 +4,6 @@ namespace AC\LoginConvenienceBundle\Security;
 
 use Fp\OpenIdBundle\Model\UserManager as BaseUserManager;
 use Fp\OpenIdBundle\Model\IdentityManagerInterface;
-use AC\LoginConvenienceBundle\Entity\OpenIdIdentity;
-use AC\LoginConvenienceBundle\Routing\OpenIdRouteAdder;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
