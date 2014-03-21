@@ -18,19 +18,6 @@ services:
         public: false
         arguments: ['@service_container', '@session.handler']
 
-    ac_login_convenience.openid_route_adder:
-        class: AC\LoginConvenienceBundle\Routing\OpenIdRouteAdder
-        arguments:
-            - @router
-            - @routing.loader
-            - %ac_login_convenience.openid_path%
-            - @kernel
-        tags:
-            - name: kernel.event_listener
-              event: kernel.request
-              method: onKernelRequest
-              priority: 100
-
     ac_login_convenience.openid_user_manager:
         class: AC\LoginConvenienceBundle\Security\UserManager
         arguments:

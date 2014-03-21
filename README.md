@@ -22,8 +22,15 @@ ac_login_convenience:
         - /important-stuff
 ```
 
-- Optionally, if you want to use the Authentication header to transmit the session key
-rather than a cookie, add this setting to config.yml:
+- Add the following to your routing.yml:
+
+```
+ac_login_convenience:
+    resource: "@ACLoginConvenience/Resources/config/routing.yml"
+```
+
+- Optionally, if you want to use the Authentication header to receive the session key
+rather than a cookie, set this in config.yml:
 
 ```
 framework:
