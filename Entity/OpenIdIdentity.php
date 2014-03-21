@@ -12,18 +12,13 @@ use Fp\OpenIdBundle\Entity\UserIdentity as BaseUserIdentity;
 class OpenIdIdentity extends BaseUserIdentity
 {
     /**
-    *
+     *
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
-    /**
-      * @ORM\ManyToOne(targetEntity="AC\LoginConvenienceBundle\Entity\AbstractEntityUser", fetch="EAGER")
-      * @ORM\JoinColumns({
-      *   @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-      * })
-      */
+    // Associated with the correct User class from IdentityUserRelationSubscriber
     protected $user;
 }

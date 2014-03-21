@@ -24,3 +24,10 @@ services:
             - @fp_openid.identity_manager
             - @security.user.provider.concrete.app_users
             - %ac_login_convenience.trusted_openid_providers%
+
+    ac_login_convenience.identity_user_relation_subscriber:
+        class: AC\LoginConvenienceBundle\EventListener\IdentityUserRelationSubscriber
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+        arguments:
+            - %ac_login_convenience.user_model_class%
