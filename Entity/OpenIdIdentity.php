@@ -20,7 +20,7 @@ class OpenIdIdentity extends BaseUserIdentity
     protected $id;
 
     /**
-      * @ORM\ManyToOne(targetEntity="AC\LoginConvenienceBundle\Entity\User", fetch="EAGER")
+      * @ORM\ManyToOne(targetEntity="AC\LoginConvenienceBundle\Entity\AbstractEntityUser", fetch="EAGER")
       * @ORM\JoinColumns({
       *   @ORM\JoinColumn(name="user_id", referencedColumnName="id")
       * })

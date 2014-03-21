@@ -38,10 +38,9 @@ class ACLoginConvenienceExtension extends Extension implements PrependExtensionI
         $userClass = $container->getParameter('ac_login_convenience.user_model_class');
         $identityClass = $container->getParameter('ac_login_convenience.openid_identity_class');
         $dbDriver = $container->getParameter('ac_login_convenience.db_driver');
-        $oidPath = $container->getParameter('ac_login_convenience.openid_path');
         $securedPaths = $container->getParameter('ac_login_convenience.secured_paths');
 
-        $secConf = $this->generateSecurityConf($oidPath, $securedPaths);
+        $secConf = $this->generateSecurityConf($securedPaths);
         $userProviderKey = $dbDriver;
         if ($dbDriver == "orm") { $userProviderKey = "entity"; }
         $secConf["providers"]["app_users"][$userProviderKey] = [
@@ -66,11 +65,6 @@ class ACLoginConvenienceExtension extends Extension implements PrependExtensionI
         $container->setParameter(
             'ac_login_convenience.secured_paths',
             $config['secured_paths']
-        );
-
-        $container->setParameter(
-            'ac_login_convenience.openid_path',
-            $config['openid_path']
         );
 
         $container->setParameter(
@@ -125,7 +119,7 @@ class ACLoginConvenienceExtension extends Extension implements PrependExtensionI
 
     }
 
-    private function generateSecurityConf($oidPath, $securedPaths)
+    private function generateSecurityConf($securedPaths)
     {
         $securityConf = [
             "providers" => [
@@ -141,8 +135,8 @@ class ACLoginConvenienceExtension extends Extension implements PrependExtensionI
                     "logout" => [ "path" => "/openid/logout" ],
                     "fp_openid" => [
                         "create_user_if_not_exists" => true,
-                        "login_path" => "$oidPath/login_openid",
-                        "check_path" => "$oidPath/login_check_openid",
+                        "login_path" => "/openid/login_openid",
+                        "check_path" => "/openid/login_check_openid",
                         "provider" => "openid_user_manager",
                         "required_attributes" => [ "contact/email" ],
                         "success_handler" => "ac_login_convenience.success_handler",
@@ -152,7 +146,7 @@ class ACLoginConvenienceExtension extends Extension implements PrependExtensionI
             ],
             "access_control" => [
                 [
-                    "path" => "^$oidPath/.+",
+                    "path" => "^/openid/.+",
                     "roles" => "IS_AUTHENTICATED_ANONYMOUSLY"
                 ]
             ]
