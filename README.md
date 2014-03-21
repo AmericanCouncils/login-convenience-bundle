@@ -26,7 +26,7 @@ ac_login_convenience:
 
 ```
 ac_login_convenience:
-    resource: "@ACLoginConvenience/Resources/config/routing.yml"
+    resource: "@ACLoginConvenienceBundle/Resources/config/routing.yml"
 ```
 
 - Optionally, if you want to use the Authentication header to receive the session key
