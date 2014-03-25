@@ -28,6 +28,7 @@ class IdentityUserRelationSubscriber implements EventSubscriber
         }
 
         $meta->mapManyToOne([
+            'fieldName' => 'user',
             'targetEntity' => $this->userModelClass,
             'fetch' => 'eager'
         ]);
