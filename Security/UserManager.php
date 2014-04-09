@@ -43,7 +43,13 @@ class UserManager extends BaseUserManager
             throw new BadCredentialsException('No email address provided');
         }
         $email = $attributes['contact/email'];
-        $user = $this->userProvider->loadUserByUsername($email);
+
+        $user = null;
+        try {
+            $user = $this->userProvider->loadUserByUsername($email);
+        } catch (UsernameNotFoundException $e) {
+            // Leave $user as null
+        }
         if (!$user) {
             throw new BadCredentialsException('User not known to application');
         }
