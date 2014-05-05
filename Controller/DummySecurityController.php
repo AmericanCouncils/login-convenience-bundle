@@ -1,6 +1,6 @@
 <?php
 
-namespace AC\LoginConvenienceBundle\DevMode;
+namespace AC\LoginConvenienceBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -8,11 +8,14 @@ class DummySecurityController extends Controller
 {
     public function loginAction()
     {
+        $userService = $this->container->getParameter('ac_login_convenience.db_persistence_service');
+        $userCls = $this->container->getParameter('ac_login_convenience.user_model_class');
+        $userRepo = $this->get($userService)->getRepository($userCls);
+        $users = $userRepo->findAll();
+
         return $this->render(
             'ACLoginConvenienceBundle:Auth:dummyLogin.html.twig',
-            [
-                'users' => $users
-            ]
+            [ 'users' => $users, 'userClass' => $userCls ]
         );
     }
 

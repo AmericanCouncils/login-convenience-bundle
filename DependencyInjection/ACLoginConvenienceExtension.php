@@ -28,6 +28,7 @@ class ACLoginConvenienceExtension extends Extension implements PrependExtensionI
             $container->getExtensionConfig($this->getAlias())
         );
 
+        $config = $container->getParameterBag()->resolveValue($config);
         $this->setParameters($container, $config);
 
         $userClass = $container->getParameter('ac_login_convenience.user_model_class');
@@ -148,9 +149,9 @@ class ACLoginConvenienceExtension extends Extension implements PrependExtensionI
             $securityConf['firewalls']['main']['dummy'] = [
                 "login_path" => "/openid/login_openid",
                 "check_path" => "/openid/dummy_check",
-                "provider" => "openid_user_manager",
+                "provider" => "app_users",
                 "success_handler" => "ac_login_convenience.success_handler",
-                "failure_handler" => "ac_login_convenience.success_handler"
+                "failure_handler" => "ac_login_convenience.failure_handler"
             ];
         } else {
             $securityConf['firewalls']['main']['fp_openid'] = [

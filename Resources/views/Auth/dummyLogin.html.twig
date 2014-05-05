@@ -1,7 +1,9 @@
-<h1>Demo User Select</h1>
+<h1>Select {{ userClass }}:</h1>
 
 <form action="{{ path('dummy_security_login_check') }}" method="post">
-    <select name="_username">
-    </select>
-    <button type="submit">Log In</button>
+    {% for user in users %}
+        {{user.roles|join(', ')}}:
+        <input type="submit" name="_username" value="{{user.email}}">
+        <br>
+    {% endfor %}
 </form>
