@@ -8,11 +8,6 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
-/**
- * This is the class that loads and manages your bundle configuration
- *
- * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
- */
 class ACLoginConvenienceExtension extends Extension implements PrependExtensionInterface
 {
     /**
@@ -39,8 +34,9 @@ class ACLoginConvenienceExtension extends Extension implements PrependExtensionI
         $identityClass = $container->getParameter('ac_login_convenience.openid_identity_class');
         $dbDriver = $container->getParameter('ac_login_convenience.db_driver');
         $securedPaths = $container->getParameter('ac_login_convenience.secured_paths');
+        $dummyMode = $container->getParameter('ac_login_convenience.dummy_mode');
 
-        $secConf = $this->generateSecurityConf($securedPaths);
+        $secConf = $this->generateSecurityConf($securedPaths, $dummyMode);
         $userProviderKey = $dbDriver;
         if ($dbDriver == "orm") { $userProviderKey = "entity"; }
         $secConf["providers"]["app_users"][$userProviderKey] = [
@@ -57,6 +53,11 @@ class ACLoginConvenienceExtension extends Extension implements PrependExtensionI
 
     private function setParameters($container, $config)
     {
+        $container->setParameter(
+            'ac_login_convenience.dummy_mode',
+            $config['dummy_mode']
+        );
+
         $container->setParameter(
             'ac_login_convenience.trusted_openid_providers',
             $config['trusted_openid_providers']
@@ -119,7 +120,7 @@ class ACLoginConvenienceExtension extends Extension implements PrependExtensionI
 
     }
 
-    private function generateSecurityConf($securedPaths)
+    private function generateSecurityConf($securedPaths, $dummyMode)
     {
         $securityConf = [
             "providers" => [
@@ -132,16 +133,7 @@ class ACLoginConvenienceExtension extends Extension implements PrependExtensionI
                 "main" => [
                     "pattern" => "^/",
                     "anonymous" => true,
-                    "logout" => [ "path" => "/openid/logout" ],
-                    "fp_openid" => [
-                        "create_user_if_not_exists" => true,
-                        "login_path" => "/openid/login_openid",
-                        "check_path" => "/openid/login_check_openid",
-                        "provider" => "openid_user_manager",
-                        "required_attributes" => [ "contact/email" ],
-                        "success_handler" => "ac_login_convenience.success_handler",
-                        "failure_handler" => "ac_login_convenience.failure_handler"
-                    ]
+                    "logout" => [ "path" => "/openid/logout" ]
                 ]
             ],
             "access_control" => [
@@ -151,6 +143,26 @@ class ACLoginConvenienceExtension extends Extension implements PrependExtensionI
                 ]
             ]
         ];
+
+        if ($dummyMode) {
+            $securityConf['firewalls']['main']['dummy'] = [
+                "login_path" => "/openid/login_openid",
+                "check_path" => "/openid/dummy_check",
+                "provider" => "openid_user_manager",
+                "success_handler" => "ac_login_convenience.success_handler",
+                "failure_handler" => "ac_login_convenience.success_handler"
+            ];
+        } else {
+            $securityConf['firewalls']['main']['fp_openid'] = [
+                "create_user_if_not_exists" => true,
+                "login_path" => "/openid/login_openid",
+                "check_path" => "/openid/login_check_openid",
+                "provider" => "openid_user_manager",
+                "required_attributes" => [ "contact/email" ],
+                "success_handler" => "ac_login_convenience.success_handler",
+                "failure_handler" => "ac_login_convenience.failure_handler"
+            ];
+        }
 
         foreach ($securedPaths as $path) {
             $securityConf["access_control"][] = [

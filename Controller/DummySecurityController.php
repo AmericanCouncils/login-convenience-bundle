@@ -1,12 +1,21 @@
 <?php
 
-namespace AC\LoginConvenienceBundle\Controller;
+namespace AC\LoginConvenienceBundle\DevMode;
 
-use Symfony\Component\HttpFoundation\Response;
-use Fp\OpenIdBundle\Controller\SecurityController as BaseSecurityController;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class SecurityController extends BaseSecurityController
+class DummySecurityController extends Controller
 {
+    public function loginAction()
+    {
+        return $this->render(
+            'ACLoginConvenienceBundle:Auth:dummyLogin.html.twig',
+            [
+                'users' => $users
+            ]
+        );
+    }
+
     # TODO: Use onLogoutSuccess from the security handler instead
     public function logoutAction()
     {
