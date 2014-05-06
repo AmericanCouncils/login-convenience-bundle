@@ -1,0 +1,17 @@
+dummy_security_login:
+    path: "/openid/login_openid"
+    defaults: { _controller: ACLoginConvenienceBundle:DummySecurity:login }
+
+# We handle this as a regular login path, not the check path, because a
+# client-side UI will normally expect this to redirect to the given OpenID
+# provider's login page.
+dummy_security_login_alt:
+    path: "/openid/login_check_openid"
+    defaults: { _controller: ACLoginConvenienceBundle:DummySecurity:login }
+
+dummy_security_login_check:
+    path: "/openid/dummy_check"
+
+dummy_security_logout:
+    path: "/openid/logout"
+    defaults: { _controller: ACLoginConvenienceBundle:DummySecurity:logout }

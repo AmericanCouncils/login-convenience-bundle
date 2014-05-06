@@ -15,20 +15,29 @@ class CreateUserCommand extends Command
         ->setName('login-convenience:create-user')
         ->setDescription('Creates a user in the local app database')
         ->addArgument('email', InputArgument::REQUIRED)
+        ->addArgument('identity', InputArgument::OPTIONAL)
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $container = $this->getApplication()->getKernel()->getContainer();
+        $dbService = $container->getParameter(
+            'ac_login_convenience.db_persistence_service'
+        );
+        $objMan = $container->get($dbService)->getManager();
 
-        $userClass = $container->getParameter('ac_login_convenience.user_model_class');
+        $userClass = $container->getParameter(
+            'ac_login_convenience.user_model_class'
+        );
         $user = new $userClass;
         $user->setEmail($input->getArgument('email'));
+        $objMan->persist($user);
+        $objMan->flush();
 
-        $persistenceService = $container->getParameter('ac_login_convenience.db_persistence_service');
-        $manager = $container->get($persistenceService)->getManager();
-        $manager->persist($user);
-        $manager->flush();
+        if ($identityUrl = $input->getArgument('identity')) {
+            $userMan = $container->get('ac_login_convenience.openid_user_manager');
+            $userMan->associateIdentityWithUser($identityUrl, $user);
+        }
     }
 }

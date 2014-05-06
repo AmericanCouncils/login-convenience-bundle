@@ -32,6 +32,9 @@ class Configuration implements ConfigurationInterface
                 ->variableNode("trusted_openid_providers")
                     ->defaultValue([])
                 ->end()
+                ->variableNode("dummy_mode")
+                    ->defaultFalse()
+                ->end()
             ->end();
 
         return $treeBuilder;

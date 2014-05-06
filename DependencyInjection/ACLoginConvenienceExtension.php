@@ -8,16 +8,8 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
-/**
- * This is the class that loads and manages your bundle configuration
- *
- * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
- */
 class ACLoginConvenienceExtension extends Extension implements PrependExtensionInterface
 {
-    /**
-     * {@inheritDoc}
-     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $serviceLoader = new Loader\YamlFileLoader(
@@ -26,6 +18,13 @@ class ACLoginConvenienceExtension extends Extension implements PrependExtensionI
         $serviceLoader->load('services.yml');
     }
 
+    /**
+     * Fill out the security and fp_open_id config sections.
+     *
+     * The main purpose of the bundle is to let app code avoid having to worry
+     * about SecurityBundle or OpenID stuff directly. Instead, the app just
+     * specifies the much simpler ac_login_convenience config section.
+     */
     public function prepend(ContainerBuilder $container)
     {
         $config = $this->processConfiguration(
@@ -33,20 +32,27 @@ class ACLoginConvenienceExtension extends Extension implements PrependExtensionI
             $container->getExtensionConfig($this->getAlias())
         );
 
+        # resolveValue replaces %var% refs with real values from parameters.yml
+        $config = $container->getParameterBag()->resolveValue($config);
         $this->setParameters($container, $config);
 
         $userClass = $container->getParameter('ac_login_convenience.user_model_class');
         $identityClass = $container->getParameter('ac_login_convenience.openid_identity_class');
         $dbDriver = $container->getParameter('ac_login_convenience.db_driver');
         $securedPaths = $container->getParameter('ac_login_convenience.secured_paths');
+        $dummyMode = $container->getParameter('ac_login_convenience.dummy_mode');
 
-        $secConf = $this->generateSecurityConf($securedPaths);
+        # Generate the big nasty Symfony security config section
+        $secConf = $this->generateSecurityConf($securedPaths, $dummyMode);
+
+        # Set up our user database for authentication against
         $userProviderKey = $dbDriver;
         if ($dbDriver == "orm") { $userProviderKey = "entity"; }
         $secConf["providers"]["app_users"][$userProviderKey] = [
             "class" => $userClass,
             "property" => "email"
         ];
+
         $container->prependExtensionConfig("security", $secConf);
 
         $container->prependExtensionConfig("fp_open_id", [
@@ -55,8 +61,14 @@ class ACLoginConvenienceExtension extends Extension implements PrependExtensionI
         ]);
     }
 
+    # See README.md for the meanings of these settings
     private function setParameters($container, $config)
     {
+        $container->setParameter(
+            'ac_login_convenience.dummy_mode',
+            $config['dummy_mode']
+        );
+
         $container->setParameter(
             'ac_login_convenience.trusted_openid_providers',
             $config['trusted_openid_providers']
@@ -72,6 +84,8 @@ class ACLoginConvenienceExtension extends Extension implements PrependExtensionI
             $config['db_driver']
         );
 
+        # Figure out how we're persisting User and Identity data
+        # This will be used by Symfony security, FpOpenIdBundle, and this bundle
         $persistenceService = null;
         if ($config["db_driver"] == "orm") {
             $persistenceService = "doctrine";
@@ -119,8 +133,9 @@ class ACLoginConvenienceExtension extends Extension implements PrependExtensionI
 
     }
 
-    private function generateSecurityConf($securedPaths)
+    private function generateSecurityConf($securedPaths, $dummyMode)
     {
+        # Common settings for Symfony security
         $securityConf = [
             "providers" => [
                 "app_users" => [],
@@ -132,16 +147,7 @@ class ACLoginConvenienceExtension extends Extension implements PrependExtensionI
                 "main" => [
                     "pattern" => "^/",
                     "anonymous" => true,
-                    "logout" => [ "path" => "/openid/logout" ],
-                    "fp_openid" => [
-                        "create_user_if_not_exists" => true,
-                        "login_path" => "/openid/login_openid",
-                        "check_path" => "/openid/login_check_openid",
-                        "provider" => "openid_user_manager",
-                        "required_attributes" => [ "contact/email" ],
-                        "success_handler" => "ac_login_convenience.success_handler",
-                        "failure_handler" => "ac_login_convenience.failure_handler"
-                    ]
+                    "logout" => [ "path" => "/openid/logout" ]
                 ]
             ],
             "access_control" => [
@@ -152,6 +158,29 @@ class ACLoginConvenienceExtension extends Extension implements PrependExtensionI
             ]
         ];
 
+        if ($dummyMode) {
+            # Use AC\LoginConvenienceBundle\DummySecurityFactory
+            $securityConf['firewalls']['main']['dummy'] = [
+                "login_path" => "/openid/login_openid",
+                "check_path" => "/openid/dummy_check",
+                "provider" => "app_users",
+                "success_handler" => "ac_login_convenience.success_handler",
+                "failure_handler" => "ac_login_convenience.failure_handler"
+            ];
+        } else {
+            # Use OpenIdAuthenticationListener from FpOpenIdBundle
+            $securityConf['firewalls']['main']['fp_openid'] = [
+                "create_user_if_not_exists" => true,
+                "login_path" => "/openid/login_openid",
+                "check_path" => "/openid/login_check_openid",
+                "provider" => "openid_user_manager",
+                "required_attributes" => [ "contact/email" ],
+                "success_handler" => "ac_login_convenience.success_handler",
+                "failure_handler" => "ac_login_convenience.failure_handler"
+            ];
+        }
+
+        # Require authentication for secure paths
         foreach ($securedPaths as $path) {
             $securityConf["access_control"][] = [
                 "path" => "^$path/.+",
