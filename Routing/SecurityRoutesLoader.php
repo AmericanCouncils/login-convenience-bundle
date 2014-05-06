@@ -38,7 +38,7 @@ class SecurityRoutesLoader implements LoaderInterface
 
     public function supports($resource, $type = null)
     {
-        return 'login_convenience_routes' === $type;
+        return 'ac_login_convenience_routes' === $type;
     }
 
     public function getResolver() {}

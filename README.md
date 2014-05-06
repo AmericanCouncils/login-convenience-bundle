@@ -28,7 +28,7 @@ ac_login_convenience:
 ```
 ac_login_convenience:
     resource: "."
-    type: "login_convenience_routes"
+    type: "ac_login_convenience_routes"
 ```
 
 - Optionally, if you want to use the Authentication header to receive the session key
