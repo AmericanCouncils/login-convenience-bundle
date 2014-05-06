@@ -59,7 +59,7 @@ class UserManager extends BaseUserManager
         return $user;
     }
 
-    public function associateIdentityWithUser($identity, $user, $attributes)
+    public function associateIdentityWithUser($identity, $user, $attributes = array())
     {
         $openIdIdentity = $this->identityManager->create();
         $openIdIdentity->setIdentity($identity);
