@@ -1,7 +1,3 @@
-parameters:
-    ac_login_convenience:
-        trusted_providers: ~
-
 services:
     ac_login_convenience.success_handler:
         class: AC\LoginConvenienceBundle\Security\ApiAuthSuccessHandler
@@ -38,4 +34,11 @@ services:
             - { name: routing.loader }
         arguments:
             - %ac_login_convenience.dummy_mode%
+            - @service_container
+
+    ac_login_convenience.username_monolog_processor:
+        class: AC\LoginConvenienceBundle\Logging\UsernameMonologProcessor
+        tags:
+            - { name: monolog.processor }
+        arguments:
             - @service_container
