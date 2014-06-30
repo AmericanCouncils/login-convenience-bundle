@@ -7,13 +7,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException as AuthEx;
 use FOS\RestBundle\View\View;
 
-class ApiAuthFailureHandler extends AuthHandler implements AuthFailureIface
+class ApiAuthFailureHandler extends ApiAuthResponseHandler implements AuthFailureIface
 {
     public function onAuthenticationFailure(Request $request, AuthEx $exception)
     {
-        return $this->response(array(
+        return $this->response($request, [
             "approved" => false,
             "message" => $exception->getMessage()
-        ));
+        ]);
     }
 }

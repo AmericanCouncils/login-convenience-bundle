@@ -147,7 +147,10 @@ class ACLoginConvenienceExtension extends Extension implements PrependExtensionI
                 "main" => [
                     "pattern" => "^/",
                     "anonymous" => true,
-                    "logout" => [ "path" => "/openid/logout" ]
+                    "logout" => [
+                        "path" => "/openid/logout",
+                        "success_handler" => "ac_login_convenience.logout_result_handler"
+                    ]
                 ]
             ],
             "access_control" => [

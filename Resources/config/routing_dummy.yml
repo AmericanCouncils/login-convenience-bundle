@@ -14,4 +14,3 @@ dummy_security_login_check:
 
 dummy_security_logout:
     path: "/openid/logout"
-    defaults: { _controller: ACLoginConvenienceBundle:DummySecurity:logout }

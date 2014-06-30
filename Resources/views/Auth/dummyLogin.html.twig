@@ -1,9 +1,11 @@
 <h1>Select {{ userClass }}:</h1>
 
 <form action="{{ path('dummy_security_login_check') }}" method="post">
+    <input type="hidden" name="target_url" value="{{targetUrl}}" />
+    <input type="hidden" name="key" value="{{key}}" />
     {% for user in users %}
         {{user.roles|join(', ')}}:
-        <input type="submit" name="_username" value="{{user.email}}">
+        <input type="submit" name="_username" value="{{user.email}}" />
         <br>
     {% endfor %}
 </form>
