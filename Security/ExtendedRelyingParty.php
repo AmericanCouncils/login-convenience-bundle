@@ -26,7 +26,7 @@ class ExtendedRelyingParty extends LightOpenIdRelyingParty
 
         // Unfortunately Request::getUri ignores changes to query ParamBag :-(
         // We have to create the new query string ourselves.
-        $r->server->set('QUERY_STRING', '');
-        return $r->getUri() . "?" . http_build_query($r->query->all());
+        $r->server->set('QUERY_STRING', http_build_query($r->query->all()));
+        return $r->getUri();
     }
 }
