@@ -6,16 +6,14 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerI
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class ApiAuthSuccessHandler extends AuthHandler implements AuthSuccessIface
+class ApiAuthSuccessHandler extends ApiAuthResponseHandler implements AuthSuccessIface
 {
     function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
-        return $this->response(
-            array(
-                "approved" => true,
-                "user" => $token->getUser()->getEmail(),
-                "sessionId" => $request->getSession()->getId()
-            )
-        );
+        return $this->response($request, [
+            "approved" => true,
+            "user" => $token->getUser()->getEmail(),
+            "sessionId" => $request->getSession()->getId()
+        ]);
     }
 }

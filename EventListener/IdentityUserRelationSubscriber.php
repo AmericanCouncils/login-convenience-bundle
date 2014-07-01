@@ -22,6 +22,8 @@ class IdentityUserRelationSubscriber implements EventSubscriber
 
     public function loadClassMetadata(LoadClassMetadataEventArgs $args)
     {
+        // Dynamically associate OpenIdIdentity with the app's user entity class
+
         $meta = $args->getClassMetadata();
         if ($meta->getName() != 'AC\LoginConvenienceBundle\Entity\OpenIdIdentity') {
             return;

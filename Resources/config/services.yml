@@ -1,13 +1,30 @@
 services:
+
+    ac_login_convenience.session_id_passthrough:
+        class: AC\LoginConvenienceBundle\Security\SessionIdPassthrough
+        public: false
+
+    ac_login_convenience.relying_party.extended:
+        class: AC\LoginConvenienceBundle\Security\ExtendedRelyingParty
+        public: false
+        arguments:
+            - @ac_login_convenience.session_id_passthrough
+
     ac_login_convenience.success_handler:
         class: AC\LoginConvenienceBundle\Security\ApiAuthSuccessHandler
         public: false
-        arguments: ['@templating']
+        arguments:
+            - @ac_login_convenience.session_id_passthrough
 
     ac_login_convenience.failure_handler:
         class: AC\LoginConvenienceBundle\Security\ApiAuthFailureHandler
         public: false
-        arguments: ['@templating']
+        arguments:
+            - @ac_login_convenience.session_id_passthrough
+
+    ac_login_convenience.logout_result_handler:
+        class: AC\LoginConvenienceBundle\Security\ApiAuthLogoutResultHandler
+        public: false
 
     ac_login_convenience.session.storage.auth_header:
         class: AC\LoginConvenienceBundle\Session\AuthHeaderSessionStorage
