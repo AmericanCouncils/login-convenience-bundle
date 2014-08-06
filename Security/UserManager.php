@@ -11,16 +11,19 @@ class UserManager extends BaseUserManager
 {
     private $userProvider;
     private $trustedProvider;
+    private $apiKeyMap;
 
     public function __construct(
     IdentityManagerInterface $identityManager,
     UserProviderInterface $userProvider,
-    $trustedProviders
+    $trustedProviders,
+    $apiKeyMap
     ) {
         parent::__construct($identityManager);
 
         $this->userProvider = $userProvider;
         $this->trustedProviders = $trustedProviders;
+        $this->apiKeyMap = $apiKeyMap;
     }
 
     // This is somewhat misnamed; we aren't going to create a user from an
@@ -46,7 +49,7 @@ class UserManager extends BaseUserManager
 
         $user = null;
         try {
-            $user = $this->userProvider->loadUserByUsername($email);
+            $user = $this->loadUserByInternalUsername($email);
         } catch (UsernameNotFoundException $e) {
             // Leave $user as null
         }
@@ -59,6 +62,11 @@ class UserManager extends BaseUserManager
         return $user;
     }
 
+    public function loadUserByInternalUsername($username)
+    {
+        return $this->userProvider->loadUserByUsername($username);
+    }
+
     public function associateIdentityWithUser($identity, $user, $attributes = array())
     {
         $openIdIdentity = $this->identityManager->create();
@@ -66,5 +74,13 @@ class UserManager extends BaseUserManager
         $openIdIdentity->setAttributes($attributes);
         $openIdIdentity->setUser($user);
         $this->identityManager->update($openIdIdentity);
+    }
+
+    public function getUsernameForApiKey($key)
+    {
+        foreach ($this->apiKeyMap as $username => $userKey) {
+            if ($key == $userKey) { return $username; }
+        }
+        return null;
     }
 }

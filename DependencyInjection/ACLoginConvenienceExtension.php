@@ -41,9 +41,10 @@ class ACLoginConvenienceExtension extends Extension implements PrependExtensionI
         $dbDriver = $container->getParameter('ac_login_convenience.db_driver');
         $securedPaths = $container->getParameter('ac_login_convenience.secured_paths');
         $dummyMode = $container->getParameter('ac_login_convenience.dummy_mode');
+        $apiKeys = $container->getParameter('ac_login_convenience.api_keys');
 
         # Generate the big nasty Symfony security config section
-        $secConf = $this->generateSecurityConf($securedPaths, $dummyMode);
+        $secConf = $this->generateSecurityConf($securedPaths, $dummyMode, $apiKeys);
 
         # Set up our user database for authentication against
         $userProviderKey = $dbDriver;
@@ -67,6 +68,11 @@ class ACLoginConvenienceExtension extends Extension implements PrependExtensionI
         $container->setParameter(
             'ac_login_convenience.dummy_mode',
             $config['dummy_mode']
+        );
+
+        $container->setParameter(
+            'ac_login_convenience.api_keys',
+            $config['api_keys']
         );
 
         $container->setParameter(
@@ -133,7 +139,7 @@ class ACLoginConvenienceExtension extends Extension implements PrependExtensionI
 
     }
 
-    private function generateSecurityConf($securedPaths, $dummyMode)
+    private function generateSecurityConf($securedPaths, $dummyMode, $apiKeys)
     {
         # Common settings for Symfony security
         $securityConf = [
@@ -160,6 +166,13 @@ class ACLoginConvenienceExtension extends Extension implements PrependExtensionI
                 ]
             ]
         ];
+
+        if (!is_null($apiKeys)) {
+            $securityConf['firewalls']['main']['simple_preauth'] = [
+                'authenticator' => 'ac_login_convenience.api_key_authenticator',
+                'provider' => 'openid_user_manager'
+            ];
+        }
 
         if ($dummyMode) {
             # Use AC\LoginConvenienceBundle\DummySecurityFactory

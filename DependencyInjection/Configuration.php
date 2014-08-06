@@ -32,8 +32,11 @@ class Configuration implements ConfigurationInterface
                 ->variableNode("trusted_openid_providers")
                     ->defaultValue([])
                 ->end()
-                ->variableNode("dummy_mode")
+                ->scalarNode("dummy_mode")
                     ->defaultFalse()
+                ->end()
+                ->variableNode("api_keys")
+                    ->defaultNull()
                 ->end()
             ->end();
 
