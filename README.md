@@ -85,3 +85,8 @@ These can be specified under the ac_login_convenience config section:
   name of the class here. You should derive it from `Entity\AbstractEntityUser`
   or `Document\AbstractDocumentUser`, depending on which `db_driver` setting
   you are using.
+
+* `api_keys`: An optional hash map from user email addresses to API keys.
+  If supplied, then clients can use an "Authorization: Key foobar" header
+  to directly access your app as the given user with key "foobar", without
+  having to go through the full OpenID-authentication and session-creation process.
