@@ -78,6 +78,8 @@ class UserManager extends BaseUserManager
 
     public function getUsernameForApiKey($key)
     {
+        if (!is_array($this->apiKeyMap)) { return null; }
+
         foreach ($this->apiKeyMap as $username => $userKey) {
             if ($key == $userKey) { return $username; }
         }
