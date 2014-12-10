@@ -21,7 +21,7 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('ac_login_convenience')
             ->children()
                 ->scalarNode("user_model_class")
-                    ->defaultValue(null)
+                    ->setRequired(true)
                 ->end()
                 ->scalarNode("db_driver")
                     ->defaultValue("orm")

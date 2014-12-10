@@ -80,8 +80,7 @@ These can be specified under the ac_login_convenience config section:
 * `db_driver`: Defaults to `orm`, meaning that users and identities are
   accessed via Doctrine ORM. Alternately, you can specify `mongodb`.
 
-* `user_model_class`: You can use your own User class instead of the
-  one that comes with LoginConvenienceBundle; specify the fully namespaced
+* `user_model_class`: You must use your own User class; specify the fully namespaced
   name of the class here. You should derive it from `Entity\AbstractEntityUser`
   or `Document\AbstractDocumentUser`, depending on which `db_driver` setting
   you are using.
