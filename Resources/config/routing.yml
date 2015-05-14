@@ -1,3 +1,7 @@
 fp_openid:
    resource: "@FpOpenIdBundle/Resources/config/routing/security.xml"
    prefix: "/openid"
+
+security_ping:
+    path: "/openid/ping"
+    defaults: { _controller: ACLoginConvenienceBundle:Ping:refreshTimeoutPing }

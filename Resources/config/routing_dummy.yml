@@ -14,3 +14,7 @@ dummy_security_login_check:
 
 dummy_security_logout:
     path: "/openid/logout"
+
+security_ping:
+    path: "/openid/ping"
+    defaults: { _controller: ACLoginConvenienceBundle:Ping:refreshTimeoutPing }
