@@ -13,6 +13,7 @@ class ApiAuthSuccessHandler extends ApiAuthResponseHandler implements AuthSucces
         return $this->response($request, [
             "approved" => true,
             "user" => $token->getUser()->getEmail(),
+            "userId" => $token->getUser()->getId(),
             "sessionId" => $request->getSession()->getId()
         ]);
     }
