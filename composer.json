@@ -12,7 +12,7 @@
     "require": {
         "php": ">=5.4",
         "fp/openid-bundle": "dev-master",
-        "fp/lightopenid": "dev-master",
+        "lightopenid/lightopenid": "dev-master",
         "symfony/symfony": ">=2.4"
     },
     "autoload": {
